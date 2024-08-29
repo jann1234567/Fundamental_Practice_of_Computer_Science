@@ -1,5 +1,6 @@
-package Server;
+package DAOs;
 
+import Models.Message;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

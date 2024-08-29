@@ -1,4 +1,4 @@
-package Server;
+package Models;
 
 import java.util.List;
 

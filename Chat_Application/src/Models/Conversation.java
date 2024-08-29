@@ -1,4 +1,4 @@
-package Server;
+package Models;
 
 public class Conversation {
     private int conversationId;

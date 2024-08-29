@@ -1,5 +1,8 @@
 package Server;
 
+import Models.User;
+import DAOs.UserDAO;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -7,6 +10,7 @@ import java.net.Socket;
 import java.sql.Connection;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
 
 public class ClientHandler implements Runnable {
     private Socket clientSocket;
