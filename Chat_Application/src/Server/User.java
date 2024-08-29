@@ -8,10 +8,10 @@ public class User {
     private List<String> conversationIds;
 
     // Constructor
-    public User(String username, String status, String conversationId) {
+    public User(String username, String status) {
         this.username = username;
         this.status = status;
-        this.conversationIds.add(conversationId);
+        // this.conversationIds.add(conversationId);
     }
 
     public String getUsername() {
