@@ -14,6 +14,17 @@ public class UserDAO {
         this.connection = connection;
     }
 
+    public void updateUserStatus(String username, String status) {
+        String query = "UPDATE Users SET status = ? WHERE username = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, status);
+            stmt.setString(2, username);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public User getUserByUsername(String username) {
         User user = null;
         String query = "SELECT * FROM Users WHERE username = ?";
