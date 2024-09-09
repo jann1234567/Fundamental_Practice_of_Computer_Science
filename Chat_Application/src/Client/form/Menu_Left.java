@@ -28,31 +28,8 @@ public class Menu_Left extends javax.swing.JPanel {
 
     private void init() {
         sp.setVerticalScrollBar(new ScrollBar());
-        menuList.setLayout(new MigLayout("fillx", "0[]0", "0[]0"));
-        System.out.println("loading Menu_Left init()");
-        DatabaseManager dbManager = new DatabaseManager();
-        Connection connection;
-        try {
-            connection = dbManager.getConnection();
-            UserDAO userDAO = new UserDAO(connection);
-            User user = userDAO.getUserByUsername(Main.getLocalUser());
-            userAccount = new ArrayList<>();
-            if (user != null) {
-                List<String> userAccount = user.getConversationIds();
-            }
-            else {
-                System.out.println("user null");
-            }
-            for (String d : userAccount) {
-                System.out.println(d);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }      
-        
-        
+        menuList.setLayout(new MigLayout("fillx", "0[]0", "0[]0")); 
 
-        
         PublicEvent.getInstance().addEventMenuLeft(new EventMenuLeft() {
             @Override
             public void newUser(List<String> users) {
@@ -97,7 +74,7 @@ public class Menu_Left extends javax.swing.JPanel {
         menuList.revalidate();
     }
     
-    @SuppressWarnings("unchecked")
+    
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 

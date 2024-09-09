@@ -45,7 +45,7 @@ public class ClientHandler implements Runnable {
 
             if (user == null) {
                 // User does not exist, so register them
-                user = new User(username, "ONLINE");
+                user = new User(username, "ONLINE", null, null);
                 userDAO.addUser(user);
                 output.println("User registered: " + username);
             } else {
