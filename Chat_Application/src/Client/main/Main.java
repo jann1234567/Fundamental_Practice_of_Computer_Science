@@ -252,7 +252,6 @@ public class Main extends javax.swing.JFrame {
                     Socket socket = new Socket(serverip, Integer.parseInt(port));
                 } 
                 catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
                 

@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConversationDAO {
     private Connection connection;
@@ -52,5 +54,22 @@ public class ConversationDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<String> getAllConversationIDs() {
+        List<String> conversationIds = new ArrayList<>();
+        try {
+            String query = "SELECT conversation_id FROM conversations";
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                conversationIds.add(resultSet.getString("conversation_id"));
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return conversationIds;
     }
 }
