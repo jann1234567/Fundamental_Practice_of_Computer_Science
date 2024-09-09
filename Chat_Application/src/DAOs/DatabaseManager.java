@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class DatabaseManager {
     private static final String URL = "jdbc:mysql://localhost:3306/sigmachat";
     private static final String USER = "your_username";
-    private static final String PASSWORD = "your_password";
+    private static final String PASSWORD = "your_password";  
 
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);

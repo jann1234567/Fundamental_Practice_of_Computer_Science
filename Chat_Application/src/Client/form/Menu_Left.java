@@ -1,27 +1,75 @@
 package Client.form;
 
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
+
 import Client.component.Item_People;
+import Client.event.EventMenuLeft;
+import Client.event.PublicEvent;
+import Client.main.Main;
 import Client.swing.ScrollBar;
+import DAOs.DatabaseManager;
+import DAOs.UserDAO;
+import Models.User;
+import java.sql.SQLException;
 import net.miginfocom.swing.MigLayout;
+
 
 public class Menu_Left extends javax.swing.JPanel {
 
+    private List<String> userAccount;
+
     public Menu_Left() {
         initComponents();
+        // dETEECT LOGIN
         init();
     }
 
     private void init() {
         sp.setVerticalScrollBar(new ScrollBar());
         menuList.setLayout(new MigLayout("fillx", "0[]0", "0[]0"));
+        System.out.println("loading Menu_Left init()");
+        DatabaseManager dbManager = new DatabaseManager();
+        Connection connection;
+        try {
+            connection = dbManager.getConnection();
+            UserDAO userDAO = new UserDAO(connection);
+            User user = userDAO.getUserByUsername(Main.getLocalUser());
+            userAccount = new ArrayList<>();
+            if (user != null) {
+                List<String> userAccount = user.getConversationIds();
+            }
+            else {
+                System.out.println("user null");
+            }
+            for (String d : userAccount) {
+                System.out.println(d);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }      
+        
+        
+
+        
+        PublicEvent.getInstance().addEventMenuLeft(new EventMenuLeft() {
+            @Override
+            public void newUser(List<String> users) {
+                for (String d : users) {
+                    //userAccount.add(d);
+                    menuList.add(new Item_People(d), "wrap");
+                    refreshMenuList();
+                }
+            }
+        });
         showMessage();
     }
 
     private void showMessage() {
-        //  test data
         menuList.removeAll();
-        for (int i = 0; i < 20; i++) {
-            menuList.add(new Item_People("People " + i), "wrap");
+        for (String d : userAccount) {
+            menuList.add(new Item_People(d), "wrap");
         }
         refreshMenuList();
     }
@@ -59,17 +107,14 @@ public class Menu_Left extends javax.swing.JPanel {
         sp = new javax.swing.JScrollPane();
         menuList = new javax.swing.JLayeredPane();
 
-        setPreferredSize(new java.awt.Dimension(200, 628));
+        setBackground(new java.awt.Color(242, 242, 242));
 
         menu.setBackground(new java.awt.Color(229, 229, 229));
         menu.setOpaque(true);
-        menu.setLayout(new java.awt.GridLayout(1, 2));
+        menu.setLayout(new java.awt.GridLayout(1, 3));
 
         menuMessage.setIconSelected(new javax.swing.ImageIcon(getClass().getResource("/Client/icon/message_selected.png"))); // NOI18N
         menuMessage.setIconSimple(new javax.swing.ImageIcon(getClass().getResource("/Client/icon/message.png"))); // NOI18N
-        menuMessage.setMaximumSize(new java.awt.Dimension(41, 42));
-        menuMessage.setMinimumSize(new java.awt.Dimension(41, 42));
-        menuMessage.setPreferredSize(new java.awt.Dimension(41, 42));
         menuMessage.setSelected(true);
         menuMessage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -91,8 +136,8 @@ public class Menu_Left extends javax.swing.JPanel {
         sp.setBackground(new java.awt.Color(242, 242, 242));
         sp.setBorder(null);
         sp.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        sp.setPreferredSize(new java.awt.Dimension(0, 576));
 
+        menuList.setBackground(new java.awt.Color(242, 242, 242));
         menuList.setOpaque(true);
 
         javax.swing.GroupLayout menuListLayout = new javax.swing.GroupLayout(menuList);
@@ -103,7 +148,7 @@ public class Menu_Left extends javax.swing.JPanel {
         );
         menuListLayout.setVerticalGroup(
             menuListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 600, Short.MAX_VALUE)
+            .addGap(0, 576, Short.MAX_VALUE)
         );
 
         sp.setViewportView(menuList);
@@ -113,14 +158,20 @@ public class Menu_Left extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(menu, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-            .addComponent(sp, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(sp)
+                .addContainerGap())
+
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(menu)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(menu, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(sp)
+            .addContainerGap())
+
         );
     }// </editor-fold>//GEN-END:initComponents
 

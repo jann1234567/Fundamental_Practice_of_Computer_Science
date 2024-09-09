@@ -1,15 +1,16 @@
 package Server;
 
-import Models.User;
 import DAOs.UserDAO;
-
+import Models.User;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.sql.Connection;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantLock;;
 
 
 public class ClientHandler implements Runnable {
@@ -33,8 +34,14 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
         try {
-            String username = input.readLine(); // Read the username sent from the client
+            //read username from client
+            DataInputStream in = new DataInputStream(new BufferedInputStream(clientSocket.getInputStream()));
+            String username = in.readUTF();
+            String status = in.readUTF();
+
+            //String username = input.readLine(); // Read the username sent from the client
             User user = userDAO.getUserByUsername(username); // Fetch user from the database
+            userDAO.updateUserStatus(username, status);  //update user status to active
 
             if (user == null) {
                 // User does not exist, so register them

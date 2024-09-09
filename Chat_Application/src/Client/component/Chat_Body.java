@@ -9,7 +9,8 @@ import java.awt.event.AdjustmentListener;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollBar;
-import net.miginfocom.swing.MigLayout;
+//import net.miginfocom.swing.MigLayout;
+import net.miginfocom.swing.*;
 
 
 public class Chat_Body extends javax.swing.JPanel {

@@ -1,18 +1,17 @@
 package Server;
 
 import DAOs.DatabaseManager;
-
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
 public class Server {
-    private static final int PORT = 5000; // Port number for the server
+    private static final int PORT = 1000; // Port number for the server
     private ExecutorService threadPool;
 
     public Server() {

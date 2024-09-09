@@ -4,27 +4,26 @@
  */
 package Client.main;
 
+import Client.form.Menu_Left;
 import Client.swing.ComponentResizer;
+import DAOs.DatabaseManager;
+import DAOs.UserDAO;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.io.IOException;
-import java.awt.Color;
-import javax.swing.ImageIcon;
-import org.jdesktop.animation.timing.Animator;
-import org.jdesktop.animation.timing.TimingTarget;
-import org.jdesktop.animation.timing.TimingTargetAdapter;
-import Server.ClientHandler;
-import Server.Server;
+import java.io.*;
 import java.net.Socket;
-import java.net.UnknownHostException;
-
+import java.awt.Color;
+import java.sql.Connection;
+import javax.swing.ImageIcon;
+import org.jdesktop.animation.timing.*;
 
 public class Main extends javax.swing.JFrame {
     
     
     private Animator animatorLogin;
     private boolean signIn;
-    
+    private static String localUser;
+
     public Main() {
         initComponents();
         init();
@@ -54,8 +53,6 @@ public class Main extends javax.swing.JFrame {
         com.setSnapSize(new Dimension(10, 10));
         home.setVisible(true);
         //initEvent(); 
-
-        
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -244,24 +241,40 @@ public class Main extends javax.swing.JFrame {
                 }
                 action = false;
             }
-            if (action) { //login and connect to server
+            if (action) {
+                setLocalUser(user);
+                System.out.println("local user: " + Main.localUser);    //store local username 
                 animatorLogin.start();
                 enableLogin(false);
-                System.out.println("Port:  " + port);
-                try {
-                    Socket socket = new Socket(serverip, Integer.parseInt(port));
+                
+                try {                    
+                    System.out.println("Connecting to Server");
+                    Socket socket = new Socket(serverip, Integer.parseInt(port));   //connect to server
+                    DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+        
+                    out.writeUTF(user); //pass username to server
+                    out.writeUTF("ONLINE"); //pass user status to server  
+                    System.out.println("Connected to server");
+                    
                 } 
                 catch (IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                
-
             }
         }
            // TODO add your handling code here:
-           
     }//GEN-LAST:event_cmdSignInActionPerformed
+
+    public void setLocalUser(String username) {
+        System.out.println("set local user");
+        Main.localUser = username;
+    }
+    public static String getLocalUser() {
+        System.out.println("main user: " + localUser);
+        return Main.localUser;
+    }
+
 
     private void txtUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUserActionPerformed
         

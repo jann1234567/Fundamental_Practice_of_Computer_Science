@@ -1,0 +1,10 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "Chat_Application/lib/flatlaf-1.2.jar",
+        "Chat_Application/lib/flatlaf-intellij-themes-1.2.jar",
+        "Chat_Application/lib/miglayout-4.0.jar",
+        "Chat_Application/lib/mysql-connector-j-9.0.0.jar",
+        "Chat_Application/lib/TimingFramework-0.55.jar"
+    ]
+}
