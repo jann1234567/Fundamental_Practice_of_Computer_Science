@@ -5,6 +5,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,11 +21,13 @@ public class MessageDAO {
 
     public void createMessage(String content, String sender, int belongedConversation) {
         try {
-            String query = "INSERT INTO messages (content, sender, belonged_conversation) VALUES (?, ?, ?)";
+            String query = "INSERT INTO messages (content, sender, belonged_conversation, time_sent) VALUES (?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, content);
             statement.setString(2, sender);
             statement.setInt(3, belongedConversation);
+            statement.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
+
             statement.executeUpdate();
             statement.close();
             System.out.println("Message created successfully");
@@ -44,9 +50,11 @@ public class MessageDAO {
                 String content = resultSet.getString("content");
                 String sender = resultSet.getString("sender");
                 int belongedConversation = resultSet.getInt("belonged_conversation");
+                Timestamp timestamp = resultSet.getTimestamp("time_sent");
+                LocalDateTime localDateTime = timestamp.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     
-                Message message = new Message(content, sender, belongedConversation);
-                messages.add(0, message); // Add the message at the beginning of the list
+                Message message = new Message(content, sender, belongedConversation, localDateTime);
+                messages.add(message); // Add the message at the beginning of the list
             }
     
             resultSet.close();
@@ -54,7 +62,6 @@ public class MessageDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    
         return messages;
     }
 }
