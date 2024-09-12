@@ -4,7 +4,7 @@
  */
 package Client.main;
 
-import Client.form.Menu_Left;
+import Client.event.PublicEvent;
 import Client.swing.ComponentResizer;
 import DAOs.DatabaseManager;
 import DAOs.UserDAO;
@@ -16,6 +16,13 @@ import java.awt.Color;
 import java.sql.Connection;
 import javax.swing.ImageIcon;
 import org.jdesktop.animation.timing.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import Models.User;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 
 public class Main extends javax.swing.JFrame {
     
@@ -23,13 +30,20 @@ public class Main extends javax.swing.JFrame {
     private Animator animatorLogin;
     private boolean signIn;
     private static String localUser;
+    List<String> Usernames = new ArrayList<>();
+    private  Socket localSocket;
 
     public Main() {
-        initComponents();
+        System.out.println("runing init component login");
+        initComponentsLogin();
+        System.out.println("runing init component home");
+        initComponentHome();
+        System.out.println("runing init component init");
         init();
+        setupWindowListener();  //detect is application closed
+
         getContentPane().setBackground(new Color(245,245,245));
         TimingTarget targetLogin= new TimingTargetAdapter(){
-
             public void timingEvent(float fraction) {
             background1.setAnimate(fraction);
             }
@@ -44,6 +58,31 @@ public class Main extends javax.swing.JFrame {
         animatorLogin.setResolution(0);
     }
 
+    private void setupWindowListener() {
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {  //run when user close the application
+                userOffline();
+            }
+        });
+    }
+
+    private void userOffline() {
+        try {
+            if (localSocket != null && !localSocket.isClosed()) {
+                DataOutputStream out = new DataOutputStream(localSocket.getOutputStream());
+                out.writeUTF(Main.getLocalUser()); // Send the username 
+                out.writeUTF("OFFLINE"); // pass user status
+                out.flush();
+                localSocket.close(); // Close the socket
+                System.out.println(Main.getLocalUser() + " disconnected from server.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     private void init() {
         setIconImage(new ImageIcon(getClass().getResource("/Client/icon/icon.png")).getImage());
         ComponentResizer com = new ComponentResizer();
@@ -54,9 +93,15 @@ public class Main extends javax.swing.JFrame {
         home.setVisible(true);
         //initEvent(); 
     }
+
+    private void initEvent() {
+        home.setVisible(true);
+    }
+    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponentsLogin() {
 
         background1 = new Client.swing.Background();
         panelLogin = new javax.swing.JPanel();
@@ -67,7 +112,6 @@ public class Main extends javax.swing.JFrame {
         txtPort = new Client.swing.PortField();
         txtServerIp = new Client.swing.ServerIpField();
         panelBody = new Client.swing.PanelTransparent();
-        home = new Client.form.Home();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -175,19 +219,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout panelBodyLayout = new javax.swing.GroupLayout(panelBody);
-        panelBody.setLayout(panelBodyLayout);
-        panelBodyLayout.setHorizontalGroup(
-            panelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(home, javax.swing.GroupLayout.DEFAULT_SIZE, 1242, Short.MAX_VALUE)
-        );
-        panelBodyLayout.setVerticalGroup(
-            panelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBodyLayout.createSequentialGroup()
-                .addContainerGap(58, Short.MAX_VALUE)
-                .addComponent(home, javax.swing.GroupLayout.PREFERRED_SIZE, 653, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
+        
 
         background1.add(panelBody, "card3");
 
@@ -205,14 +237,32 @@ public class Main extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void initComponentHome() {
+        home = new Client.form.Home();
+        javax.swing.GroupLayout panelBodyLayout = new javax.swing.GroupLayout(panelBody);
+        panelBody.setLayout(panelBodyLayout);
+        panelBodyLayout.setHorizontalGroup(
+            panelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(home, javax.swing.GroupLayout.DEFAULT_SIZE, 1242, Short.MAX_VALUE)
+        );
+        panelBodyLayout.setVerticalGroup(
+            panelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBodyLayout.createSequentialGroup()
+                .addContainerGap(58, Short.MAX_VALUE)
+                .addComponent(home, javax.swing.GroupLayout.PREFERRED_SIZE, 653, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+    }
     
- 
-    
+
     private void enableLogin(boolean action) {
         txtUser.setEditable(action);
         txtPort.setEditable(action);
         cmdSignIn.setEnabled(action);
     }
+
 
   
     private void cmdSignInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSignInActionPerformed
@@ -250,16 +300,19 @@ public class Main extends javax.swing.JFrame {
                 try {                    
                     System.out.println("Connecting to Server");
                     Socket socket = new Socket(serverip, Integer.parseInt(port));   //connect to server
+                    localSocket = socket;
                     DataOutputStream out = new DataOutputStream(socket.getOutputStream());
         
                     out.writeUTF(user); //pass username to server
-                    out.writeUTF("ONLINE"); //pass user status to server  
+                    out.writeUTF("ONLINE"); //pass user status to server 
+                    out.flush(); 
                     System.out.println("Connected to server");
                     
                 } 
                 catch (IOException e) {
                     e.printStackTrace();
                 }
+                home = new Client.form.Home();
             }
         }
            // TODO add your handling code here:
@@ -270,7 +323,6 @@ public class Main extends javax.swing.JFrame {
         Main.localUser = username;
     }
     public static String getLocalUser() {
-        System.out.println("main user: " + localUser);
         return Main.localUser;
     }
 

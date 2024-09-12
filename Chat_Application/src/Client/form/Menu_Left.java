@@ -18,40 +18,42 @@ import net.miginfocom.swing.MigLayout;
 
 public class Menu_Left extends javax.swing.JPanel {
 
-    private List<String> userAccount;
+    private List<String> userAccount = new ArrayList<>();
 
     public Menu_Left() {
         initComponents();
-        // dETEECT LOGIN
         init();
     }
 
     private void init() {
         sp.setVerticalScrollBar(new ScrollBar());
         menuList.setLayout(new MigLayout("fillx", "0[]0", "0[]0"));
-        System.out.println("loading Menu_Left init()");
+        //get friend list
         DatabaseManager dbManager = new DatabaseManager();
         Connection connection;
         try {
             connection = dbManager.getConnection();
             UserDAO userDAO = new UserDAO(connection);
             User user = userDAO.getUserByUsername(Main.getLocalUser());
-            userAccount = new ArrayList<>();
+            // userAccount = new ArrayList<>();
             if (user != null) {
-                List<String> userAccount = user.getConversationIds();
+                userAccount = UserDAO.getAllUsernames(Main.getLocalUser());
+                if (userAccount == null) {
+                    System.out.println("Menu Left - user account null");
+                }
             }
             else {
-                System.out.println("user null");
+                System.out.println("Menu Left - user null");
             }
             for (String d : userAccount) {
                 System.out.println(d);
             }
+            if (PublicEvent.getInstance().getEventMenuLeft() != null) {
+                PublicEvent.getInstance().getEventMenuLeft().newUser(userAccount);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }      
-        
-        
-
         
         PublicEvent.getInstance().addEventMenuLeft(new EventMenuLeft() {
             @Override

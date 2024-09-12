@@ -53,6 +53,12 @@ public class ClientHandler implements Runnable {
                 output.println("Welcome back, " + username);
             }
 
+            //update user status when user logout
+            username = in.readUTF();
+            status = in.readUTF();
+            user = userDAO.getUserByUsername(username);
+            userDAO.updateUserStatus(username, status);
+
             // Handle further communication with the client (chat, messages, etc.)
             String message;
             while ((message = input.readLine()) != null) {

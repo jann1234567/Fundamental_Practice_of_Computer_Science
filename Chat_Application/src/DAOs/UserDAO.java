@@ -1,5 +1,6 @@
 package DAOs;
 
+import Models.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,10 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import Models.User;
-
 public class UserDAO {
-    private Connection connection;
+    private static Connection connection;
 
     public UserDAO(Connection connection) {
         this.connection = connection;
@@ -53,10 +52,10 @@ public class UserDAO {
         }
     }
 
-    public List<String> getAllUsernames(String username) {
+    public static List<String> getAllUsernames(String username) {
         List<String> usernames = new ArrayList<>();
         String query = "SELECT username FROM Users WHERE username != ?";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+        try (PreparedStatement stmt = connection.prepareStatement(query)) { 
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
