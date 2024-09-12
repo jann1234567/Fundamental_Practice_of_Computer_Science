@@ -5,13 +5,15 @@ import java.util.List;
 public class User {
     private String username;
     private String status;
-    private List<String> conversationIds;
+    private List<Integer> groupConversationIds;
+    private List<Integer> privateConversationIds;
 
     // Constructor
-    public User(String username, String status) {
+    public User(String username, String status, List<Integer> groupConversationIds, List<Integer> privateConversationIds) {
         this.username = username;
         this.status = status;
-        // this.conversationIds.add(conversationId);
+        this.groupConversationIds = groupConversationIds;
+        this.privateConversationIds = privateConversationIds;
     }
 
     public String getUsername() {
@@ -22,15 +24,11 @@ public class User {
         return status;
     }
 
-    public List<String> getConversationIds() {
-        return conversationIds;
+    public List<Integer> getPrivateConversationIds() {
+        return privateConversationIds;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public void addConversationId(String conversationId) {
-        conversationIds.add(conversationId);
+    public List<Integer> getGroupConversationIds() {
+        return groupConversationIds;
     }
 }

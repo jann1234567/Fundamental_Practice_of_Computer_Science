@@ -1,5 +1,6 @@
 package Models;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Message {
@@ -8,11 +9,11 @@ public class Message {
     private int belongedConversation;
     private LocalDateTime timestamp; // Changed from DateTime to LocalDateTime
 
-    public Message(String content, String sender, int belongedConversation) {
+    public Message(String content, String sender, int belongedConversation, LocalDateTime timestamp) {
         this.content = content;
         this.sender = sender;
         this.belongedConversation = belongedConversation;
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = timestamp;
     }
 
     // Getters and setters

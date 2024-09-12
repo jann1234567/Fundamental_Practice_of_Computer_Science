@@ -17,7 +17,7 @@ public class Home extends javax.swing.JLayeredPane {
         this.add(new Chat());
         this.add(new Menu_Right());
     }
-    @SuppressWarnings("unchecked")
+    
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 

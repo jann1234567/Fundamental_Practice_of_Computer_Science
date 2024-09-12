@@ -30,7 +30,7 @@ public class Chat_Right extends javax.swing.JLayeredPane {
         txt.setTime("10:30 PM");    //  Testing
     }
 
-    @SuppressWarnings("unchecked")
+    
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 

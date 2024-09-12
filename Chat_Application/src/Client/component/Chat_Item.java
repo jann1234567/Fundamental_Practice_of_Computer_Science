@@ -45,8 +45,6 @@ public class Chat_Item extends javax.swing.JLayeredPane {
     public void setText(String text) {
         txt.setText(text);
     }
-    @SuppressWarnings("unchecked")
-    
     public void setTime(String time) {
         JLayeredPane layer = new JLayeredPane();
         layer.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));

@@ -31,7 +31,7 @@ public class Chat_Left extends javax.swing.JLayeredPane {
     }
     
     
-    @SuppressWarnings("unchecked")
+    
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 

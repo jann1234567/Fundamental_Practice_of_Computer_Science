@@ -33,7 +33,7 @@ public class Chat extends javax.swing.JPanel {
         add(chatBottom, "h ::50%" );
     }
    
-    @SuppressWarnings("unchecked")
+    
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
